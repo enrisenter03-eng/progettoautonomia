@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<a href="{{ url_for('dashboard') }}" class="btn btn-back">⬅ Dashboard</a>
+<h1>Registro Prestiti</h1>
+
+<table>
+    <thead>
+        <tr style="background: var(--primary); color: white;">
+            <th>Data Inizio</th>
+            <th>Username</th>
+            <th>Utente</th>
+            <th>Libro</th>
+            <th>Scadenza (15gg)</th>
+            <th>Stato</th>
+            <th>Azioni</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in prestiti %}
+        <tr>
+            <td><small>{{ p.data_inizio }}</small></td>
+            <td><code style="color: #e67e22;">@{{ p.username }}</code></td>
+            <td>{{ p.nome }} {{ p.cognome }}</td>
+            <td><em>{{ p.titolo }}</em></td>
+            <td style="color: var(--danger); font-weight: bold;">{{ p.data_scadenza }}</td>
+            <td>
+                <span class="badge {{ 'badge-red' if p.stato_prestito == 'Attivo' else 'badge-green' }}">
+                    {{ p.stato_prestito }}
+                </span>
+            </td>
+            <td>
+                {% if p.stato_prestito == 'Attivo' %}
+                <form action="{{ url_for('restituisci', id=p.id_materiale) }}" method="POST">
+                    <button class="btn btn-red" style="font-size: 0.7rem;">Restituisci</button>
+                </form>
+                {% else %}
+                <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

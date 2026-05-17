@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <h1>Catalogo Materiali</h1>
+    {% if session.ruolo in ['amministratore', 'bibliotecario'] %}
+    <a href="{{ url_for('nuovo_materiale') }}" class="btn btn-blue">+ Aggiungi Materiale</a>
+    {% endif %}
+</div>
+
+<input type="text" id="cerca" placeholder="Cerca per titolo, autore o categoria..." style="width: 100%; padding: 12px; margin: 20px 0; border: 1px solid #ddd; border-radius: 6px;">
+
+<table>
+    <thead>
+        <tr>
+            <th>Titolo</th>
+            <th>Autore</th>
+            <th>Categoria</th>
+            <th>Posizione</th>
+            <th>Stato</th>
+            <th>Azioni</th>
+        </tr>
+    </thead>
+    <tbody id="tabella">
+        {% for l in libri %}
+        <tr>
+            <td><strong>{{ l.titolo }}</strong></td>
+            <td>{{ l.autore }}</td>
+            <td>{{ l.categoria }}</td>
+            <td><small>{{ l.posizione }}</small></td>
+            <td>
+                <span class="badge {{ 'badge-green' if l.stato == 'Disponibile' else 'badge-red' }}">
+                    {{ l.stato }}
+                </span>
+            </td>
+            <td>
+                {% if l.stato == 'Disponibile' %}
+                <form action="{{ url_for('prenota', id=l.id_materiale) }}" method="POST" style="display:inline;">
+                    <button class="btn btn-blue" style="font-size: 0.75rem;">Prenota</button>
+                </form>
+                {% endif %}
+                
+                {% if session.ruolo in ['amministratore', 'bibliotecario'] %}
+                <a href="{{ url_for('modifica_materiale', id=l.id_materiale) }}" style="color: var(--accent); margin-left: 10px;"><i class="fas fa-edit"></i></a>
+                {% endif %}
+
+                {% if session.ruolo == 'amministratore' %}
+                <a href="{{ url_for('elimina_materiale', id=l.id_materiale) }}" onclick="return confirm('Eliminare definitivamente?')" style="color: var(--danger); margin-left: 10px;"><i class="fas fa-trash"></i></a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+document.getElementById('cerca').onkeyup = function() {
+    let val = this.value.toUpperCase();
+    let righe = document.getElementById('tabella').getElementsByTagName('tr');
+    for (let r of righe) {
+        r.style.display = r.innerText.toUpperCase().includes(val) ? "" : "none";
+    }
+}
+</script>
+{% endblock %}

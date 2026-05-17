@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>MUSE Biblioteca - Gestione</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary: #2c3e50; --accent: #3498db; --danger: #e74c3c; --success: #27ae60; }
+        body { font-family: 'Segoe UI', sans-serif; background: #ffffff; margin: 0; color: #333; }
+        .navbar { background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .navbar a { color: white; text-decoration: none; margin-left: 20px; font-weight: 500; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .btn { padding: 8px 16px; border-radius: 4px; border: none; cursor: pointer; font-weight: 600; text-decoration: none; transition: 0.2s; display: inline-block; }
+        .btn-blue { background: var(--accent); color: white; }
+        .btn-red { background: var(--danger); color: white; }
+        .btn-back { background: #eee; color: #555; margin-bottom: 1rem; border: 1px solid #ddd; }
+        .badge { padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; }
+        .badge-green { background: #d4edda; color: #155724; }
+        .badge-red { background: #f8d7da; color: #721c24; }
+        .flash { padding: 1rem; background: #d1ecf1; border-radius: 4px; margin-bottom: 1rem; border: 1px solid #bee5eb; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; background: white; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f8f9fa; color: var(--primary); }
+    </style>
+</head>
+<body>
+    {% if session.user %}
+    <nav class="navbar">
+        <div style="font-size: 1.4rem; font-weight: bold;">MUSE <span style="font-weight: 300;">Biblioteca</span></div>
+        <div>
+            <a href="{{ url_for('dashboard') }}"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="{{ url_for('catalogo') }}"><i class="fas fa-book"></i> Catalogo</a>
+            {% if session.ruolo in ['amministratore', 'bibliotecario'] %}
+                <a href="{{ url_for('gestione_prestiti') }}" style="color: #f1c40f;"><i class="fas fa-tasks"></i> Gestione Prestiti</a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}" style="margin-left: 20px; opacity: 0.8;"><i class="fas fa-sign-out-alt"></i> Esci</a>
+        </div>
+    </nav>
+    {% endif %}
+    <div class="container">
+        {% with messages = get_flashed_messages() %}{% if messages %}{% for m in messages %}<div class="flash">{{ m }}</div>{% endfor %}{% endif %}{% endwith %}
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

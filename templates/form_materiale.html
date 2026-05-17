@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<a href="{{ url_for('catalogo') }}" class="btn btn-back">⬅ Annulla</a>
+<h2>{{ azione }} Materiale</h2>
+
+<form method="POST" style="max-width: 500px; background: #f9f9f9; padding: 30px; border-radius: 8px; border: 1px solid #eee;">
+    <div style="margin-bottom: 15px;">
+        <label>Titolo</label><br>
+        <input type="text" name="titolo" value="{{ m.titolo if m else '' }}" required style="width: 100%; padding: 8px;">
+    </div>
+    <div style="margin-bottom: 15px;">
+        <label>Autore</label><br>
+        <input type="text" name="autore" value="{{ m.autore if m else '' }}" required style="width: 100%; padding: 8px;">
+    </div>
+    <div style="margin-bottom: 15px;">
+        <label>ISBN</label><br>
+        <input type="text" name="isbn" value="{{ m.ISBN if m else '' }}" required style="width: 100%; padding: 8px;">
+    </div>
+    <div style="margin-bottom: 15px;">
+        <label>Categoria</label><br>
+        <input type="text" name="categoria" value="{{ m.categoria if m else '' }}" required style="width: 100%; padding: 8px;">
+    </div>
+    <div style="margin-bottom: 20px;">
+        <label>Posizione (es: Scaffale A1)</label><br>
+        <input type="text" name="posizione" value="{{ m.posizione if m else '' }}" required style="width: 100%; padding: 8px;">
+    </div>
+    <button type="submit" class="btn btn-blue" style="width: 100%;">Salva Dati</button>
+</form>
+{% endblock %}
